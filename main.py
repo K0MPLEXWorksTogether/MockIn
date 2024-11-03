@@ -71,15 +71,12 @@ def connect(auth):
     send({"name": name, "message": "has entered the room."}, to=room)
     rooms[room]["members"] += 1
 
-    print(f"{name} joined {room}.")
-
 @socketIO.on("disconnect")
 def disconnect():
     room = session.get("room")
     name = session.get("name")
 
     leave_room(room)
-    print(rooms)
 
     if room in rooms:
         rooms[room]["members"] -= 1
@@ -88,7 +85,6 @@ def disconnect():
             del rooms[room]
 
     send({"name": name, "message": "has left the room."}, to=room)
-    print(f"{name} left {room}.")
 
 @socketIO.on("message")
 def message(data):
@@ -103,7 +99,6 @@ def message(data):
 
     send(content, to=room)
     rooms[room]["messages"].append(content)
-    print(f"{session.get("name")} said {content}")
 
 if __name__ == "__main__":
     socketIO.run(app, debug=True)
